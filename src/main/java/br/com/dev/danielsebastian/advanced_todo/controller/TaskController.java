@@ -1,11 +1,12 @@
 package br.com.dev.danielsebastian.advanced_todo.controller;
 
+import br.com.dev.danielsebastian.advanced_todo.model.Task;
 import br.com.dev.danielsebastian.advanced_todo.repository.TaskRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,5 +29,19 @@ public class TaskController {
                 "tasks/list",
                 Map.of("tasks", repository.findAll())
         );
+    }
+
+    @GetMapping("/create")
+    ModelAndView create(){
+        return new ModelAndView(
+                "tasks/form",
+                Map.of("task", new Task())
+        );
+    }
+
+    @PostMapping("/create")
+    String create(Task task){
+        repository.save(task);
+        return "redirect:/";
     }
 }
