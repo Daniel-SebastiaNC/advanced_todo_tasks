@@ -62,4 +62,19 @@ public class TaskController {
         repository.save(task);
         return "redirect:/";
     }
+
+    @GetMapping("/delete/{id}")
+    ModelAndView delete(@PathVariable Long id){
+        var task = repository.findById(id);
+        if (task.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return new ModelAndView("tasks/delete", Map.of("task", task.get()));
+    }
+
+    @PostMapping("/delete/{id}")
+    String delete(Task task) {
+        repository.delete(task);
+        return "redirect:/";
+    }
 }
