@@ -2,8 +2,10 @@ package br.com.dev.danielsebastian.advanced_todo.controller;
 
 import br.com.dev.danielsebastian.advanced_todo.model.Task;
 import br.com.dev.danielsebastian.advanced_todo.repository.TaskRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +45,10 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    String create(Task task){
+    String create(@Valid Task task, BindingResult result){
+        if (result.hasErrors()) {
+            return "tasks/form";
+        }
         repository.save(task);
         return "redirect:/";
     }
@@ -58,7 +63,10 @@ public class TaskController {
     }
 
     @PostMapping("/edit/{id}")
-    String edit(Task task){
+    String edit(@Valid Task task, BindingResult result){
+        if (result.hasErrors()) {
+            return "tasks/form";
+        }
         repository.save(task);
         return "redirect:/";
     }
