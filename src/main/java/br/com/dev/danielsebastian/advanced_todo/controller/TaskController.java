@@ -3,6 +3,7 @@ package br.com.dev.danielsebastian.advanced_todo.controller;
 import br.com.dev.danielsebastian.advanced_todo.model.Task;
 import br.com.dev.danielsebastian.advanced_todo.repository.TaskRepository;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -32,7 +33,7 @@ public class TaskController {
     //return modelAndView;
         return new ModelAndView(
                 "tasks/list",
-                Map.of("tasks", repository.findAll())
+                Map.of("tasks", repository.findAll(Sort.by("deadline")))
         );
     }
 
@@ -72,7 +73,7 @@ public class TaskController {
     }
 
     @GetMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id){
+    ModelAndView delete(@PathVariable("id") Long id){
         var task = repository.findById(id);
         if (task.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -83,6 +84,18 @@ public class TaskController {
     @PostMapping("/delete/{id}")
     String delete(Task task) {
         repository.delete(task);
+        return "redirect:/";
+    }
+
+    @PostMapping("/finish/{id}")
+    String finish(@PathVariable("id") Long id) {
+        var optionalTask = repository.findById(id);
+        if (optionalTask.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        var task = optionalTask.get();
+        task.markHasFinished();
+        repository.save(task);
         return "redirect:/";
     }
 }

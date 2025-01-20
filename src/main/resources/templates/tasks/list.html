@@ -36,9 +36,29 @@
         <td th:text="${#temporals.format(task.deadline)}">0</td>
         <td th:text="${#temporals.format(task.fineshedAt)} ?: '-'">0</td>
         <td>
-          <a href="" class="btn btn-sm btn-primary">Concluir</a>
-          <a th:href="@{/edit/{id}(id=${task.id})}" class="btn btn-sm btn-secondary">Editar</a>
-          <a th:href="@{/delete/{id}(id=${task.id})}" class="btn btn-sm btn-danger">Excluir</a>
+          <form class="d-inline" method="post" th:action="@{/finish/{id}(id=${task.id})}">
+            <button
+                    type="submit"
+                    class="btn btn-sm btn-primary"
+                    th:classappend="${task.fineshedAt} ? 'disabled' : ''"
+            >
+              Concluir
+            </button>
+          </form>
+
+          <a
+                  th:href="@{/edit/{id}(id=${task.id})}"
+                  class="btn btn-sm btn-secondary"
+                  th:classappend="${task.fineshedAt} ? 'disabled' : ''"
+          >
+            Editar
+          </a>
+          <a
+                  th:href="@{/delete/{id}(id=${task.id})}"
+                  class="btn btn-sm btn-danger"
+          >
+            Excluir
+          </a>
         </td>
       </tr>
       </tbody>
